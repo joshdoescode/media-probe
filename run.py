@@ -111,10 +111,11 @@ def run():
 
     # TODO - Scan a media folder for the clips list automatically
     files = [
+        '2160p50 Flash and Beep.mov',
+        'Audio Track Test - XDCAM 1080i50 16 tracks.mxf',
         'TSOutput.ts',
         'UMO - Ben Howard.mxf',
         'V00001.mp4',
-        '2160p50 Flash and Beep.mov',
         'PebbleActionTrailer_720p60.mxf',
         'Motor_720p5994DF.mxf',
         'Music Audio Shuffle Test - XDCAM 1080i50 8 Track.mxf'
