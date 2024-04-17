@@ -125,6 +125,8 @@ def run():
     for file in files:
         call_play(file)
     
+    print('Done.')
+    
 
 run()
 
