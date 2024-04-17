@@ -103,7 +103,7 @@ def call_mpeg(clip: str):
     _call(f'"{_ffmpeg}" "{clip_path}"', f'ffmpeg-{clip}')
 
 
-def run():
+def _run():
     if isdir(_output_folder):
         print(f'Deleting old output folder ("{_output_folder}").')
         rmtree(_output_folder)
@@ -127,5 +127,6 @@ def run():
     print('Done.')
     
 
-run()
+if 'main' in __name__:
+    _run()
 
