@@ -1,6 +1,6 @@
 import subprocess
-from os.path import abspath, normpath, dirname, join, isdir
-from os import mkdir
+from os.path import abspath, normpath, dirname, join, isdir, isfile
+from os import mkdir, listdir
 from shutil import rmtree
 from time import sleep
 
@@ -109,16 +109,13 @@ def run():
         print(f'Deleting old output folder ("{output_folder}").')
         rmtree(output_folder)
 
-    # TODO - Scan a media folder for the clips list automatically
     files = [
-        '2160p50 Flash and Beep.mov',
-        'Audio Track Test - XDCAM 1080i50 16 tracks.mxf',
-        'TSOutput.ts',
-        'UMO - Ben Howard.mxf',
-        'V00001.mp4',
-        'PebbleActionTrailer_720p60.mxf',
-        'Motor_720p5994DF.mxf',
-        'Music Audio Shuffle Test - XDCAM 1080i50 8 Track.mxf'
+        f for f in listdir(clips_folder) 
+        if isfile(
+            normpath(join(clips_folder, f))
+        )
+        and 'git' not in f
+        and 'thumb' not in f
     ]
     
     for file in files:
