@@ -2,33 +2,32 @@ import subprocess
 from os.path import abspath, normpath, dirname, join, isdir, isfile
 from os import mkdir, listdir
 from shutil import rmtree
-from time import sleep
 
 
-this_folder = normpath(abspath(dirname(__file__)))
+_this_folder = normpath(abspath(dirname(__file__)))
 
-output_folder = normpath(
-    join(this_folder, 'output')
+_output_folder = normpath(
+    join(_this_folder, 'output')
 )
 
-clips_folder = normpath(
-    join(this_folder, 'clips')
+_clips_folder = normpath(
+    join(_this_folder, 'clips')
 )
 
-ffprobe = normpath(
-    join(this_folder, 'ffprobe.exe')
+_ffprobe = normpath(
+    join(_this_folder, 'ffprobe.exe')
 )
-ffmpeg = normpath(
-    join(this_folder, 'ffmpeg.exe')
+_ffmpeg = normpath(
+    join(_this_folder, 'ffmpeg.exe')
 )
-ffplay = normpath(
-    join(this_folder, 'ffplay.exe')
+_ffplay = normpath(
+    join(_this_folder, 'ffplay.exe')
 )
 
     
 def to_file(output: str, cmd: str, file_name: str, failed: bool = False):    
-    if not isdir(output_folder):
-        mkdir(output_folder)
+    if not isdir(_output_folder):
+        mkdir(_output_folder)
     
     file_name = file_name.split('/')[-1].split('\\')[-1].strip()
     
@@ -41,11 +40,11 @@ def to_file(output: str, cmd: str, file_name: str, failed: bool = False):
     
     if failed:
         file_path = normpath(
-            join(output_folder, "_failed.txt")
+            join(_output_folder, "_failed.txt")
         )
     else:
         file_path = normpath(
-            join(output_folder, f"{file_name}.txt")
+            join(_output_folder, f"{file_name}.txt")
         )
     
     try:
@@ -83,36 +82,36 @@ def _call(cmd: str, file_name: str):
     
 def call_probe(clip: str):    
     clip_path = normpath(
-        join(clips_folder, clip)
+        join(_clips_folder, clip)
     )
-    _call(f'"{ffprobe}" -i "{clip_path}"', f'ffprobe-{clip}')
+    _call(f'"{_ffprobe}" -i "{clip_path}"', f'ffprobe-{clip}')
     
     
 def call_play(clip: str):    
     clip_path = normpath(
-        join(clips_folder, clip)
+        join(_clips_folder, clip)
     )
     wait = 5
     print(f'ffplay.exe will take {wait} seconds to finish.\nPlaying "{clip}".')
-    _call(f'"{ffplay}" -infbuf -loop 1 -autoexit -cpucount 1 -nodisp -volume 0 -t {wait} -i "{clip_path}"', f'ffplay-{clip}')
+    _call(f'"{_ffplay}" -infbuf -loop 1 -autoexit -cpucount 1 -nodisp -volume 0 -t {wait} -i "{clip_path}"', f'ffplay-{clip}')
     
     
 def call_mpeg(clip: str):    
     clip_path = normpath(
-        join(clips_folder, clip)
+        join(_clips_folder, clip)
     )
-    _call(f'"{ffmpeg}" "{clip_path}"', f'ffmpeg-{clip}')
+    _call(f'"{_ffmpeg}" "{clip_path}"', f'ffmpeg-{clip}')
 
 
 def run():
-    if isdir(output_folder):
-        print(f'Deleting old output folder ("{output_folder}").')
-        rmtree(output_folder)
+    if isdir(_output_folder):
+        print(f'Deleting old output folder ("{_output_folder}").')
+        rmtree(_output_folder)
 
     files = [
-        f for f in listdir(clips_folder) 
+        f for f in listdir(_clips_folder) 
         if isfile(
-            normpath(join(clips_folder, f))
+            normpath(join(_clips_folder, f))
         )
         and 'git' not in f
         and 'thumb' not in f
