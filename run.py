@@ -25,7 +25,7 @@ _ffplay = normpath(
 )
 
     
-def to_file(output: str, cmd: str, file_name: str, failed: bool = False):    
+def _to_file(output: str, cmd: str, file_name: str, failed: bool = False):    
     if not isdir(_output_folder):
         mkdir(_output_folder)
     
@@ -49,16 +49,12 @@ def to_file(output: str, cmd: str, file_name: str, failed: bool = False):
     
     try:
         with open(file_path, "a+") as f:
-            if failed:
-                f.write(
-                    f'{cmd}\n\n' +
-                    f'{output}\n' +
-                    f'\n--- --- ---\n\n'
-                )
-                print(f'\nOutput saved to: "{file_path}"')
-            else:
-                f.writelines(f'{cmd}\n--- --- ---\n\n{output}\n\n')
-                print(f'\nOutput saved to: "{file_path}"')
+            f.write(
+                f'{cmd}\n\n' +
+                f'{output}\n' +
+                f'\n--- --- ---\n\n'
+            )
+            print(f'\nOutput saved to: "{file_path}"')
     except (Exception, FileExistsError) as ex:
         print(f'Failed to save file: {ex}')        
 
@@ -75,31 +71,31 @@ def _call(cmd: str, file_name: str):
         or "invalid argument" in output_lower
     )
     
-    to_file(output, cmd, file_name, failed)
+    _to_file(output, cmd, file_name, failed)
         
     print('\n---\n')
     
     
-def call_probe(clip: str):    
-    clip_path = normpath(
-        join(_clips_folder, clip)
+def get_clip_path(filename: str) -> str:
+    return normpath(
+        join(_clips_folder, filename)
     )
+    
+    
+def call_probe(clip: str):    
+    clip_path = get_clip_path(clip)
     _call(f'"{_ffprobe}" -i "{clip_path}"', f'ffprobe-{clip}')
     
     
 def call_play(clip: str):    
-    clip_path = normpath(
-        join(_clips_folder, clip)
-    )
+    clip_path = get_clip_path(clip)
     wait = 5
     print(f'ffplay.exe will take {wait} seconds to finish.\nPlaying "{clip}".')
     _call(f'"{_ffplay}" -infbuf -loop 1 -autoexit -cpucount 1 -nodisp -volume 0 -t {wait} -i "{clip_path}"', f'ffplay-{clip}')
     
     
-def call_mpeg(clip: str):    
-    clip_path = normpath(
-        join(_clips_folder, clip)
-    )
+def call_mpeg(clip: str):
+    clip_path = get_clip_path(clip)
     _call(f'"{_ffmpeg}" "{clip_path}"', f'ffmpeg-{clip}')
 
 
